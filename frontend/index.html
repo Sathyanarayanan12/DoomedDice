@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Dice Application</title>
+</head>
+<body>
+  <main class="main--container" >
+    <div class="container">
+      <div class="result--container">
+        <div class="buttons">
+          <button class="data-loading--button" id="total">
+            Get total combinations
+          </button>
+          <button class="data-loading--button" id="distribution">
+            Get Distributions of all combinations
+          </button>
+          <button class="data-loading--button" id="probability">
+            Probability of all the sums and roll in dice
+          </button>
+        </div>
+        <div class="response--container"> `
+          <h1>Result</h1>
+          <pre class="response"></pre>
+        </div>
+    </div>
+  </main>
+  <script>
+
+    const resposeItem = document.querySelector('.response');
+
+    const localCheck = (value) => {
+      if(value) {
+      const parsedItem = JSON.stringify(value);
+      resposeItem.innerHTML = `${JSON.parse(parsedItem.split(',').join(',<br/>').split('{').join('{<br/>').split('}').join('<br/>}').split(':').join(': '))}`;
+      } else {
+        resposeItem.innerHTML = 'No data found';
+      }
+    }
+
+    const totalCombinations = (endpoint="total-combinations") => {
+      // console.log(endpoint);
+      fetch(`http://127.0.0.1:8000/${endpoint}`)
+        .then(response => response.json())
+        .then(data => {
+          resposeItem.innerHTML = data;
+          localCheck(JSON.stringify(data));
+        })
+    }
+
+    const total = document.getElementById('total');
+    const distributions = document.getElementById('distribution');
+    const probability = document.getElementById('probability');
+
+    total.addEventListener('click', () => {
+      totalCombinations(endpoint="total-combinations");
+    });
+
+    distributions.addEventListener('click', () => {
+      totalCombinations(endpoint="distribution");
+    });
+
+    probability.addEventListener('click', () => {
+      totalCombinations(endpoint="probability");
+    });
+
+  </script>
+</body>
+</html>
